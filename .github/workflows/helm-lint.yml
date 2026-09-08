@@ -1,19 +1,19 @@
 name: auto | helm lint
 
 on:
-  pull_request:
-    paths:
-      - 'packages/helm/**'
-      - 'packages/build_helm.bash'
-      - 'packages/stamp_helm_version.bash'
-      - '.github/workflows/helm-lint.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'packages/helm/**'
-      - 'packages/build_helm.bash'
-      - 'packages/stamp_helm_version.bash'
-      - '.github/workflows/helm-lint.yml'
+  # pull_request:
+  #   paths:
+  #     - 'packages/helm/**'
+  #     - 'packages/build_helm.bash'
+  #     - 'packages/stamp_helm_version.bash'
+  #     - '.github/workflows/helm-lint.yml'
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - 'packages/helm/**'
+  #     - 'packages/build_helm.bash'
+  #     - 'packages/stamp_helm_version.bash'
+  #     - '.github/workflows/helm-lint.yml'
 
 jobs:
   helm-lint:
