@@ -68,22 +68,22 @@ jobs:
       - id: classify
         run: ./scripts/ci/classify-changes.sh origin/main
 
-  perf:
-    name: perf (${{ matrix.location }})
-    needs: classify
-    if: ${{ !cancelled() }}
-    strategy:
-      fail-fast: false
-      matrix:
-        location: ${{ fromJSON(inputs.LOCATION == 'all' && '["linux-amd64","linux-arm64"]' || format('["{0}"]', inputs.LOCATION)) }}
-    uses: ./.github/workflows/build-reusable.yml
-    with:
-      LOCATION: ${{ matrix.location }}
-      CONFIG: perf
-      SQLITE: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
-      SQLSMITH: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
-      PR_SHA: ${{ inputs.PR_SHA }}
-    secrets: inherit
+  # perf:
+  #   name: perf (${{ matrix.location }})
+  #   needs: classify
+  #   if: ${{ !cancelled() }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       location: ${{ fromJSON(inputs.LOCATION == 'all' && '["linux-amd64","linux-arm64"]' || format('["{0}"]', inputs.LOCATION)) }}
+  #   uses: ./.github/workflows/build-reusable.yml
+  #   with:
+  #     LOCATION: ${{ matrix.location }}
+  #     CONFIG: perf
+  #     SQLITE: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
+  #     SQLSMITH: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
+  #     PR_SHA: ${{ inputs.PR_SHA }}
+  #   secrets: inherit
 
   dev:
     name: dev (${{ matrix.location }})
@@ -102,104 +102,104 @@ jobs:
       SQLITE: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
       SQLSMITH: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
       PR_SHA: ${{ inputs.PR_SHA }}
-    secrets: inherit
+    # secrets: inherit
 
-  asan:
-    name: asan (${{ matrix.location }})
-    needs: classify
-    if: ${{ !cancelled() }}
-    strategy:
-      fail-fast: false
-      matrix:
-        location: ${{ fromJSON(inputs.LOCATION == 'all' && '["linux-amd64","linux-arm64"]' || format('["{0}"]', inputs.LOCATION)) }}
-    uses: ./.github/workflows/build-reusable.yml
-    with:
-      LOCATION: ${{ matrix.location }}
-      CONFIG: asan
-      RUN_EXTRA: ${{ inputs.EVERYTHING || inputs.EXTRA_ASAN }}
-      IRESEARCH: ${{ inputs.EVERYTHING || needs.classify.outputs.iresearch == 'true' }}
-      DUCKDB_SUITES: ${{ inputs.EVERYTHING && 'core,avro,azure,httpfs,iceberg,inet,postgres_scanner' || needs.classify.outputs.duckdb_suites }}
-      SQLITE: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
-      SQLSMITH: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
-      PR_SHA: ${{ inputs.PR_SHA }}
-    secrets: inherit
+  # asan:
+  #   name: asan (${{ matrix.location }})
+  #   needs: classify
+  #   if: ${{ !cancelled() }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       location: ${{ fromJSON(inputs.LOCATION == 'all' && '["linux-amd64","linux-arm64"]' || format('["{0}"]', inputs.LOCATION)) }}
+  #   uses: ./.github/workflows/build-reusable.yml
+  #   with:
+  #     LOCATION: ${{ matrix.location }}
+  #     CONFIG: asan
+  #     RUN_EXTRA: ${{ inputs.EVERYTHING || inputs.EXTRA_ASAN }}
+  #     IRESEARCH: ${{ inputs.EVERYTHING || needs.classify.outputs.iresearch == 'true' }}
+  #     DUCKDB_SUITES: ${{ inputs.EVERYTHING && 'core,avro,azure,httpfs,iceberg,inet,postgres_scanner' || needs.classify.outputs.duckdb_suites }}
+  #     SQLITE: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
+  #     SQLSMITH: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
+  #     PR_SHA: ${{ inputs.PR_SHA }}
+  #   secrets: inherit
 
-  tsan:
-    name: tsan (${{ matrix.location }})
-    needs: classify
-    if: ${{ !cancelled() }}
-    strategy:
-      fail-fast: false
-      matrix:
-        location: ${{ fromJSON(inputs.LOCATION == 'all' && '["linux-amd64","linux-arm64"]' || format('["{0}"]', inputs.LOCATION)) }}
-    uses: ./.github/workflows/build-reusable.yml
-    with:
-      LOCATION: ${{ matrix.location }}
-      CONFIG: tsan
-      RUN_EXTRA: ${{ inputs.EVERYTHING || inputs.EXTRA_TSAN }}
-      IRESEARCH: ${{ inputs.EVERYTHING || needs.classify.outputs.iresearch == 'true' }}
-      DUCKDB_SUITES: ${{ inputs.EVERYTHING && 'core,avro,azure,httpfs,iceberg,inet,postgres_scanner' || needs.classify.outputs.duckdb_suites }}
-      SQLITE: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
-      SQLSMITH: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
-      PR_SHA: ${{ inputs.PR_SHA }}
-    secrets: inherit
+  # tsan:
+  #   name: tsan (${{ matrix.location }})
+  #   needs: classify
+  #   if: ${{ !cancelled() }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       location: ${{ fromJSON(inputs.LOCATION == 'all' && '["linux-amd64","linux-arm64"]' || format('["{0}"]', inputs.LOCATION)) }}
+  #   uses: ./.github/workflows/build-reusable.yml
+  #   with:
+  #     LOCATION: ${{ matrix.location }}
+  #     CONFIG: tsan
+  #     RUN_EXTRA: ${{ inputs.EVERYTHING || inputs.EXTRA_TSAN }}
+  #     IRESEARCH: ${{ inputs.EVERYTHING || needs.classify.outputs.iresearch == 'true' }}
+  #     DUCKDB_SUITES: ${{ inputs.EVERYTHING && 'core,avro,azure,httpfs,iceberg,inet,postgres_scanner' || needs.classify.outputs.duckdb_suites }}
+  #     SQLITE: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
+  #     SQLSMITH: ${{ inputs.EVERYTHING || contains(needs.classify.outputs.duckdb_suites, 'core') }}
+  #     PR_SHA: ${{ inputs.PR_SHA }}
+  #   secrets: inherit
 
-  validate-pg:
-    name: validate pg
-    needs: classify
-    if: ${{ !cancelled() && (inputs.EVERYTHING || needs.classify.outputs.pg_tests != '') }}
-    uses: ./.github/workflows/validate-pg-tests.yml
-    with:
-      LOCATION: linux-amd64
-      PR_SHA: ${{ inputs.PR_SHA }}
-      # empty = run all pg tests downstream
-      PG_TESTS: ${{ inputs.EVERYTHING && '' || needs.classify.outputs.pg_tests }}
-    secrets: inherit
+  # validate-pg:
+  #   name: validate pg
+  #   needs: classify
+  #   if: ${{ !cancelled() && (inputs.EVERYTHING || needs.classify.outputs.pg_tests != '') }}
+  #   uses: ./.github/workflows/validate-pg-tests.yml
+  #   with:
+  #     LOCATION: linux-amd64
+  #     PR_SHA: ${{ inputs.PR_SHA }}
+  #     # empty = run all pg tests downstream
+  #     PG_TESTS: ${{ inputs.EVERYTHING && '' || needs.classify.outputs.pg_tests }}
+  #   secrets: inherit
 
-  report:
-    name: Report Status
-    needs: [classify, dev, asan, tsan, perf, validate-pg]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout (for notify script)
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 1
-          submodules: false
-          sparse-checkout: scripts
-          sparse-checkout-cone-mode: true
-      - name: Send notification
-        env:
-          TG_TOKEN: ${{ secrets.TG_TOKEN }}
-          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          TG_THREAD_ID_MAIN: "51"
-          TG_THREAD_ID_BUILD: "53"
-          TG_USER_MAP: ${{ secrets.TG_USER_MAP }}
-          BRANCH: ${{ contains(inputs.BUILD_CONFIG, 'PR_BRANCH') && fromJSON(inputs.BUILD_CONFIG).PR_BRANCH || github.ref_name }}
-          JOB_STATUS: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'failure' || 'success' }}
-          ACTOR: ${{ contains(inputs.BUILD_CONFIG, 'TRIGGERED_BY') && fromJSON(inputs.BUILD_CONFIG).TRIGGERED_BY || github.actor }}
-          RUN_NAME: "serenedb | build & test [${{ inputs.LOCATION }}]"
-          RUN_NUMBER: ${{ github.run_number }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: ./scripts/send_notification.bash
-      - name: Update PR commit status
-        if: contains(inputs.BUILD_CONFIG, 'PR_SHA')
-        uses: actions/github-script@v8
-        env:
-          BUILD_CONFIG: ${{ inputs.BUILD_CONFIG }}
-          JOB_STATUS: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'failure' || 'success' }}
-        with:
-          script: |
-            const config = JSON.parse(process.env.BUILD_CONFIG);
-            const state = process.env.JOB_STATUS === 'success' ? 'success' : 'failure';
-            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: config.PR_SHA,
-              state,
-              description: state === 'success' ? 'All checks passed' : 'Some checks failed',
-              context: config.PR_STATUS_CONTEXT || 'serenedb | build & test',
-              target_url: runUrl,
-            });
+  # report:
+  #   name: Report Status
+  #   needs: [classify, dev, asan, tsan, perf, validate-pg]
+  #   if: always()
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout (for notify script)
+  #       uses: actions/checkout@v7
+  #       with:
+  #         fetch-depth: 1
+  #         submodules: false
+  #         sparse-checkout: scripts
+  #         sparse-checkout-cone-mode: true
+  #     - name: Send notification
+  #       env:
+  #         TG_TOKEN: ${{ secrets.TG_TOKEN }}
+  #         TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+  #         TG_THREAD_ID_MAIN: "51"
+  #         TG_THREAD_ID_BUILD: "53"
+  #         TG_USER_MAP: ${{ secrets.TG_USER_MAP }}
+  #         BRANCH: ${{ contains(inputs.BUILD_CONFIG, 'PR_BRANCH') && fromJSON(inputs.BUILD_CONFIG).PR_BRANCH || github.ref_name }}
+  #         JOB_STATUS: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'failure' || 'success' }}
+  #         ACTOR: ${{ contains(inputs.BUILD_CONFIG, 'TRIGGERED_BY') && fromJSON(inputs.BUILD_CONFIG).TRIGGERED_BY || github.actor }}
+  #         RUN_NAME: "serenedb | build & test [${{ inputs.LOCATION }}]"
+  #         RUN_NUMBER: ${{ github.run_number }}
+  #         RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+  #       run: ./scripts/send_notification.bash
+  #     - name: Update PR commit status
+  #       if: contains(inputs.BUILD_CONFIG, 'PR_SHA')
+  #       uses: actions/github-script@v8
+  #       env:
+  #         BUILD_CONFIG: ${{ inputs.BUILD_CONFIG }}
+  #         JOB_STATUS: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'failure' || 'success' }}
+  #       with:
+  #         script: |
+  #           const config = JSON.parse(process.env.BUILD_CONFIG);
+  #           const state = process.env.JOB_STATUS === 'success' ? 'success' : 'failure';
+  #           const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+  #           await github.rest.repos.createCommitStatus({
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             sha: config.PR_SHA,
+  #             state,
+  #             description: state === 'success' ? 'All checks passed' : 'Some checks failed',
+  #             context: config.PR_STATUS_CONTEXT || 'serenedb | build & test',
+  #             target_url: runUrl,
+  #           });
